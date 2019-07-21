@@ -28,6 +28,7 @@ exports.asyncNextHandler = fn => {
 	return async function(request, response, next) {
 		try {
 			await fn(request, response, next);
+			next();
 		} catch (err) {
 			exports.errorHandler(response, err);
 		}
