@@ -12,5 +12,7 @@ module.exports = {
 	parserOptions: {
 		ecmaVersion: 8
 	},
-	rules: {}
+	rules: {
+		'require-atomic-updates': 'off'
+	}
 };

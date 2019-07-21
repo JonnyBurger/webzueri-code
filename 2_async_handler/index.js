@@ -5,7 +5,7 @@ const app = express();
 
 app.get(
 	'/hello',
-	asyncHandler(() => {
+	asyncHandler(async () => {
 		return {
 			hello: 'world'
 		};
