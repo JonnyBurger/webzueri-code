@@ -24,7 +24,7 @@ app.get(
 		if (!request.get('x-i-promise-i-am-user')) {
 			throw createError(401, 'You are not logged in.');
 		}
-		const user = getUser(request.params.id);
+		const user = await getUser(request.params.id);
 		if (!user) {
 			throw createError(404, 'User not found');
 		}
@@ -38,12 +38,12 @@ app.post(
 		if (!request.get('x-i-promise-i-am-user')) {
 			throw createError(401, 'You are not logged in.');
 		}
-		const user = getUser(request.params.id);
+		const user = await getUser(request.params.id);
 		if (!user) {
 			throw createError(404, 'User not found');
 		}
 		if (request.get('x-i-promise-i-am-user') !== user.id) {
-			throw createError(403, 'You can only delete your own profile');
+			throw createError(403, 'You can only modfiy your own profile');
 		}
 		updateUser(request.params.id, request.body);
 	})
