@@ -11,6 +11,9 @@ app.use(bodyParser.json());
 app.get(
 	'/users',
 	asyncHandler(async (request, response) => {
+		if (!request.get('x-i-promise-i-am-user')) {
+			throw createError(401, 'You are not logged in.');
+		}
 		return getAllUsers();
 	})
 );
@@ -18,13 +21,30 @@ app.get(
 app.get(
 	'/users/:id',
 	asyncHandler(async (request, response) => {
-		return getUser(request.params.id);
+		if (!request.get('x-i-promise-i-am-user')) {
+			throw createError(401, 'You are not logged in.');
+		}
+		const user = getUser(request.params.id);
+		if (!user) {
+			throw createError(404, 'User not found');
+		}
+		return user;
 	})
 );
 
 app.post(
 	'/users/:id/update',
 	asyncHandler(async (request, response) => {
+		if (!request.get('x-i-promise-i-am-user')) {
+			throw createError(401, 'You are not logged in.');
+		}
+		const user = getUser(request.params.id);
+		if (!user) {
+			throw createError(404, 'User not found');
+		}
+		if (request.get('x-i-promise-i-am-user') !== user.id) {
+			throw createError(403, 'You can only delete your own profile');
+		}
 		updateUser(request.params.id, request.body);
 	})
 );
