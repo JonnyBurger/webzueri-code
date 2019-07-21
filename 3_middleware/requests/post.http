@@ -1,0 +1,6 @@
+POST http://localhost:8000/users/1/update
+Content-Type: application/json
+
+{
+    "name": "Jonny Burger"
+}

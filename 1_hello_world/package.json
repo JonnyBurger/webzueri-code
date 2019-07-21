@@ -1,0 +1,14 @@
+{
+  "name": "webzueri-code",
+  "version": "1.0.0",
+  "description": "Web Zueri Demo",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "author": "Jonny Burger <jonny.io>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
