@@ -1,6 +1,5 @@
 const express = require('express');
 const {asyncHandler} = require('./async-handler');
-const createError = require('http-errors');
 
 const app = express();
 
