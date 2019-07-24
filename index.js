@@ -48,7 +48,7 @@ app.post(
 			throw httpError(404, 'User not found');
 		}
 		if (request.get('x-i-promise-i-am-user') !== user.id) {
-			throw httpError(403, 'You can only modfiy your own profile');
+			throw httpError(403, 'You can only modify your own profile');
 		}
 		updateUser(request.params.id, request.body);
 	})
