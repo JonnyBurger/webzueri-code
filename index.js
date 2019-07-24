@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 app.get(
 	'/users',
-	asyncHandler(async (request, response) => {
+	asyncHandler(async request => {
 		if (!request.get('x-i-promise-i-am-user')) {
 			throw createError(401, 'You are not logged in.');
 		}
@@ -20,7 +20,7 @@ app.get(
 
 app.get(
 	'/users/:id',
-	asyncHandler(async (request, response) => {
+	asyncHandler(async request => {
 		if (!request.get('x-i-promise-i-am-user')) {
 			throw createError(401, 'You are not logged in.');
 		}
@@ -34,7 +34,7 @@ app.get(
 
 app.post(
 	'/users/:id/update',
-	asyncHandler(async (request, response) => {
+	asyncHandler(async request => {
 		if (!request.get('x-i-promise-i-am-user')) {
 			throw createError(401, 'You are not logged in.');
 		}
@@ -51,7 +51,7 @@ app.post(
 
 app.delete(
 	'/users/:id',
-	asyncHandler(async (request, response) => {
+	asyncHandler(async request => {
 		if (!request.get('x-i-promise-i-am-user')) {
 			throw createError(401, 'You are not logged in.');
 		}
