@@ -4,18 +4,12 @@ const delayForHalfASecond = () => {
 	return new Promise(resolve => setTimeout(resolve, 500));
 };
 
-exports.createUser = async user => {
-	await delayForHalfASecond();
-	data.push(user);
-	return user;
-};
-
 exports.getAllUsers = async () => {
 	await delayForHalfASecond();
 	return data;
 };
 
-exports.getUser = async id => {
+exports.getSingleUser = async id => {
 	await delayForHalfASecond();
 	return data.find(user => user.id === id);
 };
@@ -31,7 +25,7 @@ exports.updateUser = async (id, update) => {
 		}
 		return user;
 	});
-	return exports.getUser(id);
+	return exports.getSingleUser(id);
 };
 
 exports.deleteUser = async id => {
