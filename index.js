@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const httpError = require('http-errors');
-const {asyncHandler} = require('./async-handler');
+const {asyncHandler, asyncNextHandler} = require('./async-handler');
 const {
 	getAllUsers,
 	getSingleUser,
@@ -13,62 +13,45 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.get(
-	'/users',
-	asyncHandler(async request => {
+app.use(
+	asyncNextHandler(request => {
 		if (!request.get('x-i-promise-i-am-user')) {
 			throw httpError(401, 'You are not logged in.');
 		}
-		return getAllUsers();
 	})
 );
 
-app.get(
+app.get('/users', asyncHandler(() => getAllUsers()));
+
+app.use(
 	'/users/:id',
-	asyncHandler(async request => {
-		if (!request.get('x-i-promise-i-am-user')) {
-			throw httpError(401, 'You are not logged in.');
-		}
+	asyncNextHandler(async request => {
 		const user = await getSingleUser(request.params.id);
 		if (!user) {
 			throw httpError(404, 'User not found');
 		}
-		return user;
+		request.user = user;
+	})
+);
+
+app.get('/users/:id', asyncHandler(request => request.user));
+
+app.use(
+	asyncNextHandler(request => {
+		if (request.get('x-i-promise-i-am-user') !== request.user.id) {
+			throw httpError(403, 'You can only modify your own profile');
+		}
 	})
 );
 
 app.post(
 	'/users/:id/update',
-	asyncHandler(async request => {
-		if (!request.get('x-i-promise-i-am-user')) {
-			throw httpError(401, 'You are not logged in.');
-		}
-		const user = await getSingleUser(request.params.id);
-		if (!user) {
-			throw httpError(404, 'User not found');
-		}
-		if (request.get('x-i-promise-i-am-user') !== user.id) {
-			throw httpError(403, 'You can only modify your own profile');
-		}
-		updateUser(request.params.id, request.body);
-	})
+	asyncHandler(request => updateUser(request.params.id, request.body))
 );
 
 app.delete(
 	'/users/:id',
-	asyncHandler(async request => {
-		if (!request.get('x-i-promise-i-am-user')) {
-			throw httpError(401, 'You are not logged in.');
-		}
-		const user = await getSingleUser(request.params.id);
-		if (!user) {
-			throw httpError(404, 'User not found');
-		}
-		if (request.get('x-i-promise-i-am-user') !== user.id) {
-			throw httpError(403, 'You can only delete your own profile');
-		}
-		deleteUser(request.params.id);
-	})
+	asyncHandler(request => deleteUser(request.params.id))
 );
 
 app.listen(8000);
